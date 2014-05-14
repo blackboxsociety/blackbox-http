@@ -1,7 +1,7 @@
 package com.blackboxsociety.mvc.form
 
-import com.blackboxsociety.util.parser.{BodyParser, QueryStringParser}
-import com.blackboxsociety.http.{HttpResource, HttpRequest}
+import com.blackboxsociety.http.parsers._
+import com.blackboxsociety.http._
 import scalaz.concurrent.Task
 
 case class Form(fields: Seq[FormField]) extends BodyParser[Form] with QueryStringParser[Form] {

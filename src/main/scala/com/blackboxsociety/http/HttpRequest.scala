@@ -5,7 +5,6 @@ import scalaz.concurrent.Task
 import com.blackboxsociety.util._
 import com.blackboxsociety.http.crypto._
 import com.blackboxsociety.json._
-import scalaz.syntax.bind._
 
 case class HttpRequest(method:   HttpMethod,
                        resource: HttpResource,
@@ -31,7 +30,8 @@ case class HttpRequest(method:   HttpMethod,
       .find(_.exists({ case (k, _) => k == key }))
       .flatMap(_.get(key))
       .flatMap(Signed.verify(secret, _))
-      .flatMap({ n => JsonParser.parse(n).toOption >>= { m => m.as[Map[String, String]] } })
+      .flatMap({ n => JsonParser.parse(n).toOption })
+      .flatMap({ n => n.as[Map[String, String]] })
       .getOrElse(Map())
   }
 

@@ -2,7 +2,6 @@ package com.blackboxsociety.http.crypto
 
 import com.blackboxsociety.json._
 import scala.collection.immutable._
-import scalaz.syntax.bind._
 
 object SignedMap {
 
@@ -10,13 +9,11 @@ object SignedMap {
     Signed.sign(secret, normalize(map))
   }
 
-  def verify(secret: String, signed: String): Option[Map[String, String]] = {
-    val text = signed.drop(64)
-    for (
-      json     <- JsonParser.parse(text).toOption >>= { n => n.as[Map[String, String]] };
-      verified <- verifySignature(secret, signed.take(64), json)
-    ) yield verified
-  }
+  def verify(secret: String, signed: String): Option[Map[String, String]] = for (
+    json     <- JsonParser.parse(signed.drop(64)).toOption;
+    map      <- json.as[Map[String, String]];
+    verified <- verifySignature(secret, signed.take(64), map)
+  ) yield verified
 
   private def verifySignature(secret: String,
                               signature: String,
