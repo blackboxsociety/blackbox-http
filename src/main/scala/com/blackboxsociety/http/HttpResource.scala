@@ -1,6 +1,6 @@
 package com.blackboxsociety.http
 
-import com.blackboxsociety.util.parser.QueryStringParser
+import com.blackboxsociety.http.parsers._
 
 case class HttpResource(path: String, queryString: Option[String] = None) {
 

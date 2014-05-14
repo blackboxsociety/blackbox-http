@@ -1,8 +1,7 @@
 package com.blackboxsociety.http
 
-import com.blackboxsociety.security.crypto.SignedMap
+import com.blackboxsociety.http.crypto._
 import com.blackboxsociety.json._
-import com.blackboxsociety.waterhouse._
 
 sealed trait Session[Self <: Session[Self, Secret], Secret <: SignedSecret] {
 
