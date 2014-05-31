@@ -6,6 +6,7 @@ import scalaz.concurrent._
 import scalaz.syntax.bind._
 import com.blackboxsociety.net._
 import com.blackboxsociety.http._
+import com.blackboxsociety.http.parsers.HttpParser
 
 trait BlackBox {
 

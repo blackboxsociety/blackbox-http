@@ -6,6 +6,7 @@ import scalaz.concurrent.Task._
 import com.blackboxsociety.util.parser._
 import com.blackboxsociety.util._
 import com.blackboxsociety.http._
+import com.blackboxsociety.http.parsers.HttpParserException
 
 case class ParsedHttpResponse(version: HttpVersion,
                               responseValue: Int,

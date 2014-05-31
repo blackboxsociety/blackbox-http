@@ -17,7 +17,7 @@ object Build extends Build {
     .settings(
       name                  := "blackbox-http",
       organization          := "com.blackboxsociety",
-      version               := "0.3.0",
+      version               := "0.3-SNAPSHOT",
       scalaVersion          := "2.11.0",
       licenses              += ("MIT", url("http://opensource.org/licenses/MIT")),
       //scalacOptions       += "-feature",

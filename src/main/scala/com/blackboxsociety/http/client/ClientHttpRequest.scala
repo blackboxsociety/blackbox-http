@@ -5,17 +5,9 @@ import com.blackboxsociety.http._
 import java.net.InetSocketAddress
 import java.nio.channels.SocketChannel
 import com.blackboxsociety.net.TcpClient
+import com.blackboxsociety.http.parsers.Url
 
-/**
- * TODO:
- *   * Host vs Path separation
- *   * Empirical testing
- *   * Support multiple body types
- *     * File streams
- *     * Strings
- */
-
-case class ClientHttpRequest(url: String,
+case class ClientHttpRequest(url: Url,
                              method: HttpMethod = HttpGet,
                              headers: Option[Seq[HttpHeader]] = None,
                              version: HttpVersion = HttpVersionOneDotOne,
@@ -78,8 +70,8 @@ case class ClientHttpRequest(url: String,
     withMethod(HttpPut).withBody(b).query()
   }
 
-  private def query(): Task[ClientHttpResponse] = {
-    val c = TcpClient(SocketChannel.open(new InetSocketAddress(url, 80)))
+  def query(): Task[ClientHttpResponse] = {
+    val c = TcpClient(SocketChannel.open(new InetSocketAddress(url.host, url.port.getOrElse(80))))
     for (
       w <- c.write(this);
       r <- HttpResponseParser(c)
@@ -91,13 +83,15 @@ case class ClientHttpRequest(url: String,
 object ClientHttpRequest {
 
   implicit def toByteArray(request: ClientHttpRequest): Array[Byte] = {
-    val init    = s"${request.method} ${request.url} ${request.version}\r\n"
-    val headers = request.headers.getOrElse(List()).map({ n => s"${n.key}: ${n.value}\r\n" }).mkString + "\r\n"
+    val init    = s"${request.method} ${request.url.toRequestPath} ${request.version}\r\n"
+    val headers = (request.headers
+                         .getOrElse(List()) :+ HttpGenericHeader("Host", request.url.host))
+                         .map({ n => s"${n.key}: ${n.value}\r\n" })
+                         .mkString + "\r\n"
     request.body match {
       case None    => init.getBytes ++ headers.getBytes
       case Some(b) => init.getBytes ++ headers.getBytes ++ b
     }
-
   }
 
 }

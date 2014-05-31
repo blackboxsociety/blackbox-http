@@ -1,10 +1,8 @@
-package com.blackboxsociety.http
+package com.blackboxsociety.http.parsers
 
 import scala.util.parsing.combinator._
 import scalaz.concurrent._
 import scalaz.concurrent.Task._
-import com.blackboxsociety.util.parser._
-import com.blackboxsociety.util._
 
 case class HttpParserException(s: String) extends Throwable
 
